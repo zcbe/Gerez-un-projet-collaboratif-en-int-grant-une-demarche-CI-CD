@@ -1,0 +1,39 @@
+name: Tests and Code Coverage Front
+#workflow se lance lors d'ub push ou pull_request sur la branche main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        #répertoire de travail
+        working-directory: ./front 
+    strategy:
+      matrix:
+        #version de node
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      #installation des dépendances
+      - name: install dependencies
+        run: npm install
+      #test et coverage du front
+      - name: test coverage
+        run: npm run test-coverage
+      #ajout du résultat du coverage dans git
+      - name: Commit Code Coverage Report
+        run: |
+          git pull
+          git config --global user.email "benyahia.zaim@gmail.com"
+          git config --global user.name "zcbe"
+          git add coverage
+          git commit -m "Add jacoco code coverage report"
+          git push
