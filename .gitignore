@@ -1,11 +1,13 @@
 HELP.md
 target/
+!target/site/jacoco/  #  autoriser Jacoco dans le dossier target
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 node_modules/
 dist/
 coverage/
+
 
 ### STS ###
 .apt_generated
