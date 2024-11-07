@@ -1,29 +1,36 @@
 name: Tests and Code Coverage Back
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
   pull_request:
-    branches: [ "main" ]
-jobs:
+    branches: ["main"]
 
+jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - run: echo "Launching Mvn Test on Backend source code"
+      
+      # Récupération du code source
       - uses: actions/checkout@v3
+
+      # Configuration de JDK 11
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-        #lance le clean test du back
+      
+      # Lancer les tests dans le répertoire 'back'
       - name: Build with Maven
-        run: mvn clean test --file pom.xml
-        #affiche le status
-      - run: echo "🍏Mvn Test's status is ${{ job.status }}."
-            #coverage du back
+        run: mvn clean test --file back/pom.xml
+      
+      # Affiche le statut des tests
+      - run: echo "🍏 Mvn Test's status is ${{ job.status }}."
+
+      # Génération de la couverture de code
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -37,10 +44,12 @@ jobs:
           pass-emoji: 🍏
           fail-emoji: ❌
           debug-mode: false
-            #affiche le coverage total et du changement
+
+      # Affiche le taux de couverture global et des fichiers modifiés
       - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
       - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
-            #ajout du résultat du coverage dans git
+
+      # Ajout du rapport de couverture de code dans le dépôt
       - name: Commit Code Coverage Report
         run: |
           git config --global user.email "benyahia.zaim@gmail.com"
