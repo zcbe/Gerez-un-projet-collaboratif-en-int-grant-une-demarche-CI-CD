@@ -8,6 +8,10 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        #répertoire de travail
+        working-directory: ./back
     steps:
       - run: echo "Launching Mvn Test on Backend source code"
       - uses: actions/checkout@v3
@@ -17,10 +21,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
+        #lance le clean test du back
       - name: Build with Maven
-        run: mvn clean test --file back/pom.xml
+        run: mvn clean test --file pom.xml
+        #affiche le status
       - run: echo "🍏Mvn Test's status is ${{ job.status }}."
-      
+            #coverage du back
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -34,8 +40,10 @@ jobs:
           pass-emoji: 🍏
           fail-emoji: ❌
           debug-mode: false
+            #affiche le coverage total et du changement
       - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
       - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
+            #ajout du résultat du coverage dans git
       - name: Commit Code Coverage Report
         run: |
           git config --global user.email "benyahia.zaim@gmail.com"
