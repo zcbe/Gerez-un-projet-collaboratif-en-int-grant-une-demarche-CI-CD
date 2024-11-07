@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: back # Définit 'back' comme répertoire de travail
+
     steps:
       - run: echo "Launching Mvn Test on Backend source code"
       
@@ -23,14 +27,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
-      # Lancer les tests dans le répertoire 'back'
+      # Lancer les tests avec Maven
       - name: Build with Maven
-        run: mvn clean test --file back/pom.xml
+        run: mvn clean test
       
       # Affiche le statut des tests
       - run: echo "🍏 Mvn Test's status is ${{ job.status }}."
 
-      # Génération de la couverture de code
+      # Génération de la couverture de code Jacoco
       - name: Add coverage
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
@@ -57,8 +61,8 @@ jobs:
           
           # Vérifie si des fichiers ont changé avant de committer
           if ! git diff --quiet; then
-            git add .
-            git commit -m "Add jacoco code coverage report"
+            git add target/site/jacoco # Ajoute uniquement les rapports générés
+            git commit -m "Add Jacoco code coverage report"
             git push origin dev
           else
             echo "No changes to commit"
