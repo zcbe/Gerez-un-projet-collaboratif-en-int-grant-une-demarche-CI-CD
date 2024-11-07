@@ -8,10 +8,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        #répertoire de travail
-        working-directory: /back
+
     steps:
       - run: echo "Launching Mvn Test on Backend source code"
       - uses: actions/checkout@v3
