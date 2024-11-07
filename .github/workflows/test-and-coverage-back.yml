@@ -21,17 +21,17 @@ jobs:
       - name: Build with Maven
         run: mvn clean test --file back/pom.xml
       - run: echo "🍏Mvn Test's status is ${{ job.status }}."
+      
       - name: Add coverage
-            id: jacoco
-            uses: madrapps/jacoco-report@v1.6.1
-            with:
-              paths: |
-                ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
-              token: ${{ secrets.GITHUB_TOKEN }}
-              title: Code Coverage
-              min-coverage-overall: 80
-              min-coverage-changed-files: 80
-              pass-emoji: 🍏
-              fail-emoji: ❌
-              debug-mode: false
-    
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code Coverage
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          pass-emoji: 🍏
+          fail-emoji: ❌
+          debug-mode: false
