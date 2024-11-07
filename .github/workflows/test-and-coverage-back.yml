@@ -36,3 +36,10 @@ jobs:
           debug-mode: false
       - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
       - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
+      - name: Commit Code Coverage Report
+        run: |
+              git config --global user.email "benyahia.zaim@gmail.com"
+              git config --global user.name "zcbe"
+              git add .
+              git commit -m "Add jacoco code coverage report"
+              git push origin dev
