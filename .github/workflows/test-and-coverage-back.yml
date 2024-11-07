@@ -1,5 +1,4 @@
-name: GitHub Actions BOB App
-run-name: Tests Back and Code Coverage
+name: Tests and Code Coverage Back
 on:
   push:
     branches: [ "dev" ]
@@ -35,3 +34,5 @@ jobs:
           pass-emoji: 🍏
           fail-emoji: ❌
           debug-mode: false
+      - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
+      - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
