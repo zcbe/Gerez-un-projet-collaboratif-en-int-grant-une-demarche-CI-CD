@@ -1,8 +1,8 @@
 name: Tests and Code Coverage Front
-#workflow se lance lors d'ub push ou pull_request sur  main
+#workflow se lance lors d'ub push ou pull_request sur le main
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
   pull_request:
     branches: [ "main" ]
 jobs:
