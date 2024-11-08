@@ -35,5 +35,5 @@ jobs:
           git config --global user.email "benyahia.zaim@gmail.com"
           git config --global user.name "zcbe"
           git add coverage
-          git commit -m "Add jacoco code coverage report"
+          git commit -m "Add karma code coverage report"
           git push
