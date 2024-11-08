@@ -1,6 +1,4 @@
 name: Tests and Code Coverage Back
-
-# Déclenche l'action sur push vers la branche "dev" ou pull_request vers "main"
 on:
   push:
     branches: ["dev"]
@@ -9,69 +7,68 @@ on:
 
 jobs:
   build:
-    # Utilise la dernière version d'Ubuntu pour exécuter le job
     runs-on: ubuntu-latest
 
     steps:
-      # Message d'information pour indiquer le début des tests
+      - run: echo "Launching Mvn Test on Backend source code"
       
-      # Étape pour récupérer le code source du dépôt
+      # Récupération du code source
       - uses: actions/checkout@v3
 
-      # Configuration de JDK 11 pour Maven
+      # Configuration de JDK 11
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '11'  # Spécifie la version Java
+          java-version: '11'
           distribution: 'temurin'
-          cache: maven  # Active la mise en cache pour Maven
+          cache: maven
       
-      # Vérifie si le dossier backend "back" est présent à l'emplacement attendu
+      # Vérifie que le dossier `back` existe au bon emplacement
       - name: Vérification du chemin backend
         run: |
           if [ ! -d "/home/runner/work/Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD/Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD/back" ]; then
             echo "Erreur : le dossier 'back' n'existe pas au bon emplacement"
-            exit 1  # Arrête le workflow si le dossier est manquant
+            exit 1
           fi
 
-      # Lance les tests Maven dans le répertoire backend "back"
+      # Lancer les tests dans le répertoire `back`
       - name: Build with Maven
         working-directory: /home/runner/work/Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD/Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD/back
-        run: mvn clean test --file pom.xml  # Nettoie et exécute les tests
+        run: mvn clean test --file pom.xml
       
-      # Affiche le statut des tests après leur exécution
+      # Affiche le statut des tests
       - run: echo "🍏 Mvn Test's status is ${{ job.status }}."
 
-      # Génération du rapport de couverture de code avec JaCoCo
+      # Génération de la couverture de code
       - name: Add coverage
-        id: jacoco  # Définit un identifiant pour récupérer les outputs
+        id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
         with:
           paths: |
-            ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml  # Spécifie le chemin du rapport JaCoCo
-          token: ${{ secrets.GITHUB_TOKEN }}  # Utilise le token GitHub pour authentification
+            ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
           title: Code Coverage
-          min-coverage-overall: 80  # Seuil de couverture globale minimum à 80%
-          min-coverage-changed-files: 80  # Seuil de couverture pour fichiers modifiés à 80%
-          pass-emoji: 🍏  # Emoji pour succès
-          fail-emoji: ❌  # Emoji pour échec
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          pass-emoji: 🍏
+          fail-emoji: ❌
           debug-mode: false
 
-      # Affiche les taux de couverture dans la console
+      # Affiche le taux de couverture global et des fichiers modifiés
       - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
       - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
 
-      # Ajoute le rapport de couverture de code au dépôt
+      # Ajout du rapport de couverture de code dans le dépôt
       - name: Commit Code Coverage Report
         run: |
-          # Configuration de Git pour l'utilisateur
           git config --global user.email "benyahia.zaim@gmail.com"
           git config --global user.name "zcbe"
           
-          # Vérifie si des fichiers ont été modifiés avant de committer
+          # Vérifie si des fichiers ont changé avant de committer
           if ! git diff --quiet; then
-            git add .  # Ajoute les fichiers modifiés
-            git commit -m "Add jacoco code coverage report"  # Commit avec un message
-            git push origin dev  # Pousse les modifications vers la branche "dev"
+            git add .
+            git commit -m "Add jacoco code coverage report"
+            git push origin dev
           else
-            echo "No changes to commit"  # Message si aucun changement
+            echo "No changes to commit"
+          fi
