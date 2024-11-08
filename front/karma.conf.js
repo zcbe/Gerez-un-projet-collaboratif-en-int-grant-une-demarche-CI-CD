@@ -28,16 +28,17 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, './coverage/bobapp'),
       subdir: '.',
       reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
+        { type: 'html' },        // Rapport HTML pour visualisation dans le navigateur
+        { type: 'text-summary' }, // Résumé dans la console
+        { type: 'lcov' }          // Rapport LCOV pour les outils de CI/CD
       ]
     },
     reporters: ['progress', 'kjhtml'],
-    port: 9876,
+    port: 9877,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true
   });
