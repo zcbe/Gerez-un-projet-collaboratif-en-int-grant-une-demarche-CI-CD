@@ -29,11 +29,11 @@ jobs:
       - name: test coverage
         run: npm run test-coverage
       #ajout du résultat du coverage dans git
-      - name: Commit Code Coverage Report
-        run: |
-          git pull
-          git config --global user.email "benyahia.zaim@gmail.com"
-          git config --global user.name "zcbe"
-          git add coverage
-          git commit -m "Add karma code coverage report"
-          git push
+     #  - name: Commit Code Coverage Report
+     #    run: |
+     #      git pull
+     #      git config --global user.email "benyahia.zaim@gmail.com"
+     #      git config --global user.name "zcbe"
+     #      git add coverage
+     #      git commit -m "Add karma code coverage report"
+     #      git push

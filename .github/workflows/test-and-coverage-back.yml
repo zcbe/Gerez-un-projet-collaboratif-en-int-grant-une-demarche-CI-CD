@@ -59,16 +59,16 @@ jobs:
       - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
 
       # Ajout du rapport de couverture de code dans le dépôt
-      - name: Commit Code Coverage Report
-        run: |
-          git config --global user.email "benyahia.zaim@gmail.com"
-          git config --global user.name "zcbe"
+       #- name: Commit Code Coverage Report
+        # run: |
+          # git config --global user.email "benyahia.zaim@gmail.com"
+          # git config --global user.name "zcbe"
           
           # Vérifie si des fichiers ont changé avant de committer
-          if ! git diff --quiet; then
-            git add .
-            git commit -m "Add jacoco code coverage report"
-            git push origin dev
-          else
-            echo "No changes to commit"
-          fi
+          # if ! git diff --quiet; then
+            # git add .
+            # git commit -m "Add jacoco code coverage report"
+            # git push origin dev
+          # else
+            # echo "No changes to commit"
+          # fi
