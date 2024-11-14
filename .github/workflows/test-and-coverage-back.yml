@@ -1,0 +1,56 @@
+name: Tests and Code Coverage Back
+
+on:
+  push:
+    branches: [ "main" ]  
+  pull_request:
+    branches: [ "main" ] 
+
+jobs:
+  build_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Launching Mvn Test on Backend source code"
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Build with Maven
+        working-directory: ${{ github.workspace }}/back
+        run: mvn clean test --file pom.xml
+
+      - name: Check JaCoCo Report
+        run: cat ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
+
+      - name: Add coverage
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code Coverage
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          pass-emoji: 🍏
+          fail-emoji: ❌
+          debug-mode: false
+
+      - run: echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
+      - run: echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
+
+      - name: Commit Jacoco Code Coverage Report
+        run: |
+          git config --global user.email "benyahia.zaim@gmail.com"
+          git config --global user.name "zcbe"
+          git fetch
+          git checkout main
+          git pull origin main
+          git add -f back/target/site/jacoco
+          git commit -m "Add Jacoco code coverage report"
+          git push origin main
