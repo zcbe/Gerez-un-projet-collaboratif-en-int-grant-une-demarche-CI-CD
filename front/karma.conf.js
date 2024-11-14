@@ -33,8 +33,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
+    browsers: ['ChromeHeadless'], // Utiliser Chrome en mode headless
+    singleRun: true,              // Exécute les tests une seule fois
     restartOnFileChange: true
   });
 };
