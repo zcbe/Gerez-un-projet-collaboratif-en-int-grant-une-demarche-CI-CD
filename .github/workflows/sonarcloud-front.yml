@@ -4,6 +4,7 @@ on:
     branches: [ "main" ]  
   pull_request:
     branches: [ "main" ] 
+
 jobs:
   sonar_frontend:
     name: Build and analyze frontend  # Nom du job d'analyse du frontend
@@ -12,6 +13,7 @@ jobs:
       run:
         # Définit le répertoire de travail comme étant le dossier 'front'
         working-directory: front
+    
     steps:
       # Étape 1 : Télécharger le code source du dépôt
       - name: Checkout repository
@@ -39,4 +41,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Jeton GitHub pour authentification
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Jeton SonarCloud pour authentification
-          SONAR_SCANNER_OPTS: "-Dsonar.javascript.lcov.reportPaths=coverage/bobapp/lcov.info"
+          SONAR_SCANNER_OPTS: "-Dsonar.javascript.lcov.reportPaths=coverage/bobapp/lcov.info" # Rapport de couverture

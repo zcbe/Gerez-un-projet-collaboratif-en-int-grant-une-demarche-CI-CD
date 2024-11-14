@@ -1,4 +1,3 @@
-// Karma configuration file
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -12,18 +11,18 @@ module.exports = function (config) {
     ],
     client: {
       jasmine: {
-        // configuration options for Jasmine
+        // Configuration de Jasmine
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false // Laisse la sortie de Jasmine Spec Runner visible dans le navigateur
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true // Supprime les traces dupliquées
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/bobapp'),
       subdir: '.',
       reporters: [
-        { type: 'html' },         // Pour la visualisation locale
+        { type: 'html' }, // Pour la visualisation locale
         { type: 'text-summary' },  // Résumé de la couverture dans la console
         { type: 'lcov', subdir: '.' } // Format lcov pour SonarCloud
       ]
@@ -33,8 +32,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'], // Utiliser Chrome en mode headless
-    singleRun: true,              // Exécute les tests une seule fois
+    browsers: ['ChromeHeadless'], // Utiliser Chrome en mode headless pour CI
+    singleRun: true,  // Exécuter les tests une seule fois
     restartOnFileChange: true
   });
 };
