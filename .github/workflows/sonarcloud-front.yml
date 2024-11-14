@@ -1,0 +1,88 @@
+name: SonarCloud Back  # Nom du workflow pour l'analyse SonarCloud du backend
+on:
+  push:
+    branches: [ "main" ]  
+  pull_request:
+    branches: [ "main" ] 
+jobs:
+  sonar_backend:
+    name: Build and analyze backend  # Nom de ce job
+    runs-on: ubuntu-latest  # Exécute ce job sur une machine virtuelle Ubuntu
+    
+    defaults:
+      run:
+        # Répertoire de travail pour les commandes exécutées dans ce job
+        working-directory: ./back
+    
+    steps:
+      # Étape 1 : Télécharger le code source du dépôt
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Télécharge tout l'historique Git, nécessaire pour SonarCloud
+      # Étape 2 : Configurer JDK 17 pour la compilation
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17  # Version du JDK à utiliser
+          distribution: 'zulu'  # Distribution du JDK
+      # Étape 3 : Mise en cache des paquets SonarCloud pour accélérer les prochaines exécutions
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache  # Emplacement du cache SonarCloud
+          key: ${{ runner.os }}-sonar  # Clé unique basée sur le système d'exploitation
+          restore-keys: ${{ runner.os }}-sonar  # Clé de restauration
+      # Étape 4 : Mise en cache des paquets Maven pour accélérer les prochaines exécutions
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2  # Emplacement du cache Maven
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/back/pom.xml') }}  # Clé unique basée sur le fichier pom.xml
+          restore-keys: ${{ runner.os }}-m2  # Clé de restauration
+      # Étape 5 : Compiler et analyser le backend avec SonarCloud
+      - name: Build and analyze backend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Jeton GitHub pour authentification si nécessaire
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Jeton SonarCloud pour authentification
+        run: |
+          # Exécute l'analyse SonarCloud et les tests
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Bobapp_BackEnd
+          mvn clean test  # Lance les tests Maven
+
+
+name: SonarCloud Front  # Nom du workflow pour l'analyse SonarCloud du frontend
+on:
+  push:
+    branches: [ "main" ]  
+  pull_request:
+    branches: [ "main" ] 
+jobs:
+  sonar_frontend:
+    name: Build and analyze frontend  # Nom du job d'analyse du frontend
+    runs-on: ubuntu-latest  # Machine virtuelle Ubuntu
+    defaults:
+      run:
+        # Définit le répertoire de travail comme étant le dossier 'front'
+        working-directory: front
+    steps:
+      # Étape 1 : Télécharger le code source du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      # Étape 2 : Configurer Node.js version 16 pour le projet
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"  # Version de Node.js requise pour le projet
+          cwd: "front"  # Répertoire de travail pour cette action
+      # Étape 3 : Installer les dépendances Node.js du frontend
+      - name: Install dependencies
+        run: npm install  # Installe les dépendances définies dans package.json
+      # Étape 4 : Lancer l'analyse SonarCloud sur le frontend
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: front  # Spécifie le dossier racine du projet frontend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Jeton GitHub pour authentification
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Jeton SonarCloud pour authentification
