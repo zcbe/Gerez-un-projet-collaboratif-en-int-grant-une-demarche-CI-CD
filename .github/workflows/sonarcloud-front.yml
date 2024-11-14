@@ -1,5 +1,4 @@
-
-name: SonarCloud Front  # Nom du workflow pour l'analyse SonarCloud du frontend
+name: SonarCloud Front  # Workflow pour l'analyse SonarCloud du frontend
 on:
   push:
     branches: [ "main" ]  
@@ -17,16 +16,22 @@ jobs:
       # Étape 1 : Télécharger le code source du dépôt
       - name: Checkout repository
         uses: actions/checkout@v3
+      
       # Étape 2 : Configurer Node.js version 16 pour le projet
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "16"  # Version de Node.js requise pour le projet
-          cwd: "front"  # Répertoire de travail pour cette action
+      
       # Étape 3 : Installer les dépendances Node.js du frontend
       - name: Install dependencies
         run: npm install  # Installe les dépendances définies dans package.json
-      # Étape 4 : Lancer l'analyse SonarCloud sur le frontend
+      
+      # Étape 4 : Exécuter les tests avec génération de la couverture de code en format lcov
+      - name: Run tests with coverage
+        run: npm run test -- --code-coverage --watch=false
+      
+      # Étape 5 : Lancer l'analyse SonarCloud en utilisant le rapport de couverture lcov
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
@@ -34,3 +39,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Jeton GitHub pour authentification
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Jeton SonarCloud pour authentification
+          SONAR_SCANNER_OPTS: "-Dsonar.javascript.lcov.reportPaths=coverage/bobapp/lcov.info"
