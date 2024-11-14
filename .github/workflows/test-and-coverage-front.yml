@@ -39,7 +39,6 @@ jobs:
       - name: Check Coverage Report
         run: cat coverage/bobapp/index.html  # Vérification que le rapport existe
 
-      # Étape 6 : Commit du rapport de couverture de code généré par Karma
       - name: Commit Karma Code Coverage Report
         run: |
           # Configuration de l'identité Git pour le commit
