@@ -1,0 +1,64 @@
+name: Tests and Code Coverage Front  
+
+on:
+  push:
+    branches: [ "main" ]  
+  pull_request:
+    branches: [ "main" ]  
+
+jobs:
+  build_frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./front 
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      # Étape 1 : Récupération du code source du dépôt
+      - uses: actions/checkout@v3
+
+      # Étape 2 : Configuration de la version de Node.js spécifiée dans le matrix
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Étape 3 : Installation des dépendances Node.js
+      - name: install dependencies
+        run: npm install
+
+      # Étape 4 : Exécution des tests avec génération de la couverture du code
+      - name: test coverage
+        run: npm run test-coverage
+
+      # Étape 5 : Vérifier le rapport de couverture avant de l'envoyer à SonarCloud
+      - name: Check Coverage Report
+        run: cat coverage/bobapp/lcov-report/index.html  # Vérification que le rapport existe
+
+      # Étape 6 : Commit du rapport de couverture de code généré par Karma
+      - name: Commit Karma Code Coverage Report
+        run: |
+          # Configuration de l'identité Git pour le commit
+          git config --global user.email "benyahia.zaim@gmail.com"
+          git config --global user.name "zcbe"
+          
+          # Synchronisation avec la branche "main" pour éviter les conflits
+          git fetch
+          git checkout main
+          git pull origin main
+          
+          # Forcer l'ajout du rapport de couverture dans le répertoire "coverage/bobapp"
+          git add -f coverage/bobapp
+          
+          # Création d'un commit pour le rapport de couverture de code
+          git commit -m "Add Karma code coverage report"
+          
+          # Poussée du commit vers la branche "main" sur le dépôt
+          git push origin main
+
+      # Étape 7 : Affiche le statut des tests avec une icône en fonction du succès ou de l'échec
+      - run: echo "🍏 Npm run test-coverage's status is ${{ job.status }}."
