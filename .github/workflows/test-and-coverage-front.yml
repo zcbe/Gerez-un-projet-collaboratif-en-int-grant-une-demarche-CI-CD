@@ -61,10 +61,10 @@ jobs:
           git push origin main
 
           
-        # Forcer l'ajout du rapport de couverture dans le répertoire "coverage/bobapp"
+          # Forcer l'ajout du rapport de couverture dans le répertoire "coverage/bobapp"
           git add -f coverage/bobapp
           
-        # Création d'un commit pour le rapport de couverture de code
+          # Création d'un commit pour le rapport de couverture de code
           git commit -m "Add Karma code coverage report"
           
           # Poussée du commit vers la branche "main" sur le dépôt
