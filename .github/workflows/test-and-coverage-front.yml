@@ -37,7 +37,8 @@ jobs:
 
       # Étape 5 : Vérifier le rapport de couverture avant de l'envoyer à SonarCloud
       - name: Check Coverage Report
-        run: cat coverage/bobapp/index.html  # Vérification que le rapport existe
+        run: cat coverage/bobapp/index.html
+        
 
       - name: Commit Karma Code Coverage Report
         run: |
