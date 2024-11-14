@@ -39,6 +39,8 @@ jobs:
       - name: Check Coverage Report
         run: cat coverage/bobapp/index.html
         
+      - name: Check modified files
+        run: git status
 
       - name: Commit Karma Code Coverage Report
         run: |
