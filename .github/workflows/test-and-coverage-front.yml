@@ -75,3 +75,4 @@ jobs:
 
       # Étape 8 : Affiche le statut des tests avec une icône
       - run: echo "🍏 Npm run test-coverage's status is ${{ job.status }}."
+ 
